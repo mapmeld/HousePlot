@@ -9,6 +9,7 @@
 import urllib, urllib2
 osmfile = open('macon.osm', 'r')
 
+allnodes = { }
 nodes = { }
 inway = False
 wayname = ""
@@ -28,10 +29,10 @@ for line in osmfile:
     lat = lat[ 0 : lat.find('"') ]
     lng = line[ line.find('lon=') + 5 : len(line) ]
     lng = lng[ 0 : lng.find('"') ]
-    nodes[ node_id ] = lat + "," + lng
+    allnodes[ node_id ] = lat + "," + lng
 
   # 2) Add Streets
-  if(line.find('<way') > -1):
+  elif(line.find('<way') > -1):
     inway = True
 
   elif(inway == True):
@@ -80,15 +81,17 @@ for line in osmfile:
                 continue
             
               if(firstToAdd is None):
+                print "attempting connection at "
+                print allnodes[node]
                 values = {
                   "streetid": wayids[wayname],
-                  "latlng": nodes[node]
+                  "latlng": allnodes[node]
                 }
                 data = urllib.urlencode(values)
                 urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + streetid + '/follow', data)).read()
                 values = {
                   "streetid": streetid,
-                  "latlng": nodes[node]
+                  "latlng": allnodes[node]
                 }
                 data = urllib.urlencode(values)
                 urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + wayids[wayname] + '/follow', data)).read()

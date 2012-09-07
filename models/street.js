@@ -85,12 +85,12 @@ Street.prototype.del = function (callback) {
 Street.prototype.follow = function (other, latlng, callback) {
     this._node.createRelationshipTo(other._node, 'connectsto', {}, function (err, rel) {
         callback(err);
-        rel.data["latlng"] = latlng;
+        /*rel.data["latlng"] = latlng;
         rel.save(function(err){
           if(err){
             console.log(banana);
           }
-        });
+        });*/
     });
 };
 
