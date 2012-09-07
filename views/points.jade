@@ -1,0 +1,15 @@
+h1 Points
+
+if points.length
+    p Here are the current points:
+    ul.points
+        for point in points
+            li.point
+                a(href='/points/#{point.id}') #{point.number}
+else
+    p There are no points currently.
+
+form(action='', method='POST')
+    p Create a new point:
+    input(type='text', name='name', placeholder='Name', required)
+    input(type='submit', value='Create')

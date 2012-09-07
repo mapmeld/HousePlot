@@ -1,0 +1,39 @@
+h1 #{point.name}
+
+p
+    a(href='/points') Back to everyone
+
+if following.length
+    p #{point.name} is following #{following.length} points:
+    // TODO should say 'point' if only one! ;)
+    ul.points
+        for other in following
+            li.point
+                form(action='/points/#{point.id}/unfollow', method='POST')
+                    a(href='/points/#{other.id}') #{other.name}
+                    input(type='hidden', name='point[id]', value='#{other.id}')
+                    input(type='submit', class='unfollow', value='x')
+else
+    p #{point.name} isn't following anyone currently.
+
+if others.length
+    form(action='/points/#{point.id}/follow', method='POST')
+        p Add someone for #{point.name} to follow:
+        label
+            select(name='streetid', required)
+                option(value='')
+                for point in others
+                    option(value='#{point.id}') #{point.name}
+        input(type='submit', value='Follow')
+else
+    p There's no one else left for #{point.name} to follow!
+
+form(action='/points/#{point.id}', method='POST')
+    p Edit this point:
+    input(type='text', name='name', placeholder='#{point.name}', required)
+    input(type='submit', value='Update')
+
+form(action='/points/#{point.id}', method='POST', onsubmit='return confirm("Are you sure?");')
+    p And if you're feeling destructive…
+    input(type='hidden', name='_method', value='DELETE')
+    input(type='submit', value='Delete Point')
