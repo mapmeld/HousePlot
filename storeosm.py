@@ -65,6 +65,7 @@ for line in osmfile:
           # store final url: /streets/ID
           if((firstToAdd == None) or (firstToAdd == wayname)):
             wayids[ wayname ] = urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets', data)).geturl().split('streets/')[1]
+            print wayids[ wayname ]
             firstToAdd = None
           else:
             # retrieve this way ID by name

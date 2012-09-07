@@ -87,7 +87,9 @@ Street.prototype.follow = function (other, latlng, callback) {
         callback(err);
         rel.data["latlng"] = latlng;
         rel.save(function(err){
-          conole.log(banana);
+          if(err){
+            console.log(banana);
+          }
         });
     });
 };
