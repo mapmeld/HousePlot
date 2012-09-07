@@ -86,6 +86,9 @@ Street.prototype.follow = function (other, latlng, callback) {
     this._node.createRelationshipTo(other._node, 'connectsto', {}, function (err, rel) {
         callback(err);
         rel.data["latlng"] = latlng;
+        rel.save(function(err){
+          conole.log(banana);
+        });
     });
 };
 
