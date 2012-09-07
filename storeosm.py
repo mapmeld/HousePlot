@@ -21,14 +21,14 @@ firstToAdd = None
 for line in osmfile:
 
   # 1) Becoming aware of nodes
-  #if(line.find('<node id=') > -1):
-  #  node_id = line[ line.find('id=') + 4 : len(line) ]
-  #  node_id = node_id[ 0 : node_id.find('"') ]
-  #  lat = line[ line.find('lat=') + 5 : len(line) ]
-  #  lat = lat[ 0 : lat.find('"') ]
-  #  lng = line[ line.find('lon=') + 5 : len(line) ]
-  #  lng = lng[ 0 : lng.find('"') ]
-  #  nodes[ node_id ] = [ lat, lng, [] ]
+  if(line.find('<node id=') > -1):
+    node_id = line[ line.find('id=') + 4 : len(line) ]
+    node_id = node_id[ 0 : node_id.find('"') ]
+    lat = line[ line.find('lat=') + 5 : len(line) ]
+    lat = lat[ 0 : lat.find('"') ]
+    lng = line[ line.find('lon=') + 5 : len(line) ]
+    lng = lng[ 0 : lng.find('"') ]
+    nodes[ node_id ] = lat + "," + lng
 
   # 2) Add Streets
   if(line.find('<way') > -1):
@@ -64,11 +64,11 @@ for line in osmfile:
           data = urllib.urlencode(values)
           # store final url: /streets/ID
           if((firstToAdd == None) or (firstToAdd == wayname)):
-            wayids[ wayname ] = urllib2.urlopen(urllib2.Request('http://localhost:3000/streets', data)).geturl().split('streets/')[1]
+            wayids[ wayname ] = urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets', data)).geturl().split('streets/')[1]
             firstToAdd = None
           else:
             # retrieve this way ID by name
-            wayids[ wayname ] = urllib2.urlopen('http://localhost:3000/streetname/' + wayname).read()           
+            wayids[ wayname ] = urllib2.urlopen('http://houseplot.herokuapp.com/streetname/' + wayname).read()           
 
         # now add relationships to nodes in the way
         for node in waynodes:
@@ -80,15 +80,17 @@ for line in osmfile:
             
               if(firstToAdd is None):
                 values = {
-                  "streetid": wayids[wayname]
+                  "streetid": wayids[wayname],
+                  "latlng": nodes[node]
                 }
                 data = urllib.urlencode(values)
-                urllib2.urlopen(urllib2.Request('http://localhost:3000/streets/' + streetid + '/follow', data)).read()
+                urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + streetid + '/follow', data)).read()
                 values = {
-                  "streetid": streetid
+                  "streetid": streetid,
+                  "latlng": nodes[node]
                 }
                 data = urllib.urlencode(values)
-                urllib2.urlopen(urllib2.Request('http://localhost:3000/streets/' + wayids[wayname] + '/follow', data)).read()
+                urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + wayids[wayname] + '/follow', data)).read()
                 print "connection made"
             
             nodes[node].append( wayids[ wayname ] )

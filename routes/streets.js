@@ -102,7 +102,7 @@ exports.follow = function (req, res, next) {
         if (err) return next(err);
         Street.get((req.body.streetid || req.body.street.id), function (err, other) {
             if (err) return next(err);
-            street.follow(other, function (err) {
+            street.follow(other, req.body.latlng, function (err) {
                 if (err) return next(err);
                 res.redirect('/streets/' + street.id);
             });
