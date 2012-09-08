@@ -17,22 +17,22 @@ waynodes = []
 addedways = []
 wayids = {}
 isHighway = False
-firstToAdd = None
+firstToAdd = "wetherlyln"
 
 for line in osmfile:
 
   # 1) Becoming aware of nodes
-  if(line.find('<node id=') > -1):
-    node_id = line[ line.find('id=') + 4 : len(line) ]
-    node_id = node_id[ 0 : node_id.find('"') ]
-    lat = line[ line.find('lat=') + 5 : len(line) ]
-    lat = lat[ 0 : lat.find('"') ]
-    lng = line[ line.find('lon=') + 5 : len(line) ]
-    lng = lng[ 0 : lng.find('"') ]
-    allnodes[ node_id ] = lat + "," + lng
+  #if(line.find('<node id=') > -1):
+  #  node_id = line[ line.find('id=') + 4 : len(line) ]
+  #  node_id = node_id[ 0 : node_id.find('"') ]
+  #  lat = line[ line.find('lat=') + 5 : len(line) ]
+  #  lat = lat[ 0 : lat.find('"') ]
+  #  lng = line[ line.find('lon=') + 5 : len(line) ]
+  #  lng = lng[ 0 : lng.find('"') ]
+  #  allnodes[ node_id ] = lat + "," + lng
 
   # 2) Add Streets
-  elif(line.find('<way') > -1):
+  if(line.find('<way') > -1):
     inway = True
 
   elif(inway == True):
@@ -81,17 +81,17 @@ for line in osmfile:
                 continue
             
               if(firstToAdd is None):
-                print "attempting connection at "
-                print allnodes[node]
+                #print "attempting connection at "
+                #print allnodes[node]
                 values = {
-                  "streetid": wayids[wayname],
-                  "latlng": allnodes[node]
+                  "streetid": wayids[wayname]  #,
+                  #"latlng": allnodes[node]
                 }
                 data = urllib.urlencode(values)
                 urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + streetid + '/follow', data)).read()
                 values = {
-                  "streetid": streetid,
-                  "latlng": allnodes[node]
+                  "streetid": streetid #,
+                  #"latlng": allnodes[node]
                 }
                 data = urllib.urlencode(values)
                 urllib2.urlopen(urllib2.Request('http://houseplot.herokuapp.com/streets/' + wayids[wayname] + '/follow', data)).read()
