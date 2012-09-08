@@ -4,7 +4,7 @@
 
 Visiting <a href="http://houseplot.herokuapp.com/streets/3208">a street's page</a> shows you all named streets which are connected to it. <a href="http://www.openstreetmap.org/?lat=32.75212&lon=-83.871&zoom=15&layers=M">Look at the map</a> to see the actual street network.
 
-HousePlot stores houses as Points and links them to Streets. This allows us to search for all houses demolished on a street and all its connecting streets:
+HousePlot stores houses as Points and links them to Streets. This allows us to search for all houses demolished on a street:
 
     var params = {
         streetId: req.query['id'] * 1,
