@@ -17,6 +17,19 @@ HousePlot stores houses as Points and links them to Streets. This allows us to s
         'RETURN points'
     ].join('\n');
 
+You can also collect demolished houses on streets <b>connected to your street</b>:
+
+    var params = {
+        streetId: req.query['id'] * 1,
+        status: "Demolished & Cleared"
+    };
+    var query = [
+        'START points=node:nodes(type="point"), neighborstreet=node:nodes(type="street"), street=node({streetId})',
+        'MATCH (points) -[:partof]-> (neighborstreet) -[:connectsto]-> (street)',
+        'WHERE points.action = {status}',
+        'RETURN points'
+    ].join('\n');
+
 Collecting statistics on a neighborhood level for every point in a large dataset becomes much easier using this type of database.
 
 ## Building the street network
