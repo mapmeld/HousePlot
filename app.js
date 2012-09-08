@@ -67,5 +67,7 @@ app.post('/points/:id/unfollow', routes.points.unfollow);
 app.get('/numbers/:streetid', routes.points.getNumbers);
 app.get('/demolished/:streetid', routes.points.getDemolished);
 
+app.get('/network/:streetid', routes.points.getNetwork);
+
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

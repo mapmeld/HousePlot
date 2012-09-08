@@ -34,6 +34,16 @@ exports.getNumbers = function(req, res, next) {
     });
 };
 
+// Get /network/:streetid
+exports.getNetwork = function(req, res, next) {
+    Point.getNetwork(req.params.streetid, function (err, points) {
+        if (err) return next(err);
+        res.render('points', {
+            points: points
+        });
+    });
+};
+
 // POST /points
 exports.create = function (req, res, next) {
     Point.create({

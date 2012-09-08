@@ -4,7 +4,7 @@ p
     a(href='/points') Back to everyone
 
 if following.length
-    p #{point.name} is following #{following.length} points:
+    p #{point.number} is part of #{following.length} streets:
     // TODO should say 'point' if only one! ;)
     ul.points
         for other in following
@@ -13,12 +13,14 @@ if following.length
                     a(href='/points/#{other.id}') #{other.name}
                     input(type='hidden', name='point[id]', value='#{other.id}')
                     input(type='submit', class='unfollow', value='x')
+                    
+    p Case opened on #{point.opendate} and closed on #{point.closedate}. Action was #{point.action}.
 else
-    p #{point.name} isn't following anyone currently.
+    p #{point.name} isn't part of any streets.
 
 if others.length
     form(action='/points/#{point.id}/follow', method='POST')
-        p Add someone for #{point.name} to follow:
+        p Add #{point.name} to a street:
         label
             select(name='streetid', required)
                 option(value='')
@@ -34,6 +36,6 @@ form(action='/points/#{point.id}', method='POST')
     input(type='submit', value='Update')
 
 form(action='/points/#{point.id}', method='POST', onsubmit='return confirm("Are you sure?");')
-    p And if you're feeling destructive…
+    p Please don't delete this case:
     input(type='hidden', name='_method', value='DELETE')
     input(type='submit', value='Delete Point')

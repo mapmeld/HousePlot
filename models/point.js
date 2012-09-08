@@ -2,6 +2,7 @@
 // Point model logic.
 
 var neo4j = require('neo4j');
+var Street = require('./street.js')
 var db = new neo4j.GraphDatabase(process.env.NEO4J_URL || 'http://localhost:7474');
 
 // constants:
@@ -108,9 +109,9 @@ Point.prototype.unfollow = function (other, callback) {
 Point.prototype.getFollowingAndOthers = function (callback) {
     // query all users and whether we follow each one or not:
     var query = [
-        'START point=node({pointId}), other=node:INDEX_NAME(INDEX_KEY="street")',
-        'MATCH (point) -[rel?:FOLLOWS_REL]-> (other)',
-        'RETURN other, COUNT(rel)'  // COUNT(rel) is a hack for 1 or 0
+        'START point=node({pointId}), street=node:nodes(type="street")',
+        'MATCH (point) -[rel?:partof]-> (street)',
+        'RETURN street, COUNT(rel)'  // COUNT(rel) is a hack for 1 or 0
     ].join('\n')
         .replace('INDEX_NAME', INDEX_NAME)
         .replace('INDEX_KEY', INDEX_KEY)
@@ -129,8 +130,8 @@ Point.prototype.getFollowingAndOthers = function (callback) {
         var others = [];
 
         for (var i = 0; i < results.length; i++) {
-            var other = new Point(results[i]['other']);
-            var follows = results[i]['count(rel)'];
+            var other = new Street(results[i]['street']);
+            var follows = results[i]['COUNT(rel)'];
                 // XXX neo4j bug: returned names are always lowercase!
                 // TODO FIXME when updating to the next version of neo4j.
 
@@ -185,6 +186,30 @@ Point.getNumbers = function(streetid, callback) {
     var query = [
         'START points=node:nodes(type="point"), street=node({streetId})',
         'MATCH (points) -[:partof]-> (street)',
+        'RETURN points'
+    ].join('\n');
+    var params = {
+        streetId: streetid * 1
+    };
+    db.query(query, params, function(err, results) {
+        if (err) return callback(err);
+        var points = [];
+        var numbers = [];
+        for(var r=0;r<results.length;r++){
+          var point = new Point(results[r]["points"]);
+          if(numbers.indexOf(point.number) == -1){
+            numbers.push(point.number);
+            points.push(point);
+          }
+        }
+        callback(null, points);
+    });
+};
+
+Point.getNetwork = function(streetid, callback) {
+    var query = [
+        'START points=node:nodes(type="point"), street=node({streetId})',
+        'MATCH (points) -[:partof]-> (neighbors) -[:connectsto]-> (street)',
         'RETURN points'
     ].join('\n');
     var params = {

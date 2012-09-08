@@ -24,7 +24,7 @@ You can also collect demolished houses on streets <b>connected to your street</b
         status: "Demolished & Cleared"
     };
     var query = [
-        'START points=node:nodes(type="point"), neighborstreet=node:nodes(type="street"), street=node({streetId})',
+        'START points=node:nodes(type="point"), street=node({streetId})',
         'MATCH (points) -[:partof]-> (neighborstreet) -[:connectsto]-> (street)',
         'WHERE points.action = {status}',
         'RETURN points'
