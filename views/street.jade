@@ -13,8 +13,17 @@ if following.length
                     a(href='/streets/#{other.id}') #{other.name}
                     input(type='hidden', name='street[id]', value='#{other.id}')
                     input(type='submit', class='unfollow', value='x')
+    
 else
     p #{street.name} isn't connected to any streets.
+
+p(style="float:left;padding:15px;border:1px solid #000;")
+    a(href="/demolished/#{street.id}")
+        Demolitions on Street
+    br
+    br
+    a(href="/network/#{street.id}")
+        Demolitions on Connecting Streets
 
 if others.length
     form(action='/streets/#{street.id}/follow', method='POST')

@@ -1,16 +1,16 @@
 h1 Points
 
 if points.length
-    p Here are the current points:
+    p Here are all demolitions 1997-2012:
     ul.points
         for point in points
             li.point
                 a(href='/points/#{point.id}')
                   span #{point.number} demolished on #{point.closedate}
 else
-    p There are no points currently.
+    p There are no demolitions here.
 
 form(action='', method='POST')
-    p Create a new point:
+    p Add a new demolition:
     input(type='text', name='name', placeholder='Name', required)
     input(type='submit', value='Create')
