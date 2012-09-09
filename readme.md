@@ -2,9 +2,13 @@
 
 <a href="http://houseplot.herokuapp.com">HousePlot</a> uses a node.js server and a neo4j graph database to build a street network from OpenStreetMap data.
 
-Visiting <a href="http://houseplot.herokuapp.com/streets/3208">a street's page</a> shows you all named streets which are connected to it. <a href="http://www.openstreetmap.org/?lat=32.75212&lon=-83.871&zoom=15&layers=M">Look at the map</a> to see the actual street network.
+Visiting <a href="http://houseplot.herokuapp.com/streets/709">a street's page</a> shows you all named streets which are connected to it.
 
-HousePlot stores houses as Points and links them to Streets. This allows us to search for all houses demolished on a street:
+## Using Neo4j, a graph database
+
+HousePlot stores houses as Points and links them to Streets. Then Streets are linked to any connecting Streets. This allows us to collect information on a network / neighborhood level.
+
+<a href="http://houseplot.herokuapp.com/demolished/709">/demolished</a> searches for demolished houses on a street:
 
     var params = {
         streetId: req.query['id'] * 1,
@@ -17,7 +21,7 @@ HousePlot stores houses as Points and links them to Streets. This allows us to s
         'RETURN points'
     ].join('\n');
 
-You can also collect demolished houses on streets <b>connected to your street</b>:
+<a href="http://houseplot.herokuapp.com/network/709">/network</a> returns the demolished houses on streets <b>connected to your street</b>:
 
     var params = {
         streetId: req.query['id'] * 1,
@@ -30,12 +34,15 @@ You can also collect demolished houses on streets <b>connected to your street</b
         'RETURN points'
     ].join('\n');
 
-Collecting statistics on a neighborhood level for every point in a large dataset becomes much easier using this type of database.
+Collecting statistics on a neighborhood level for every point in a large dataset becomes much simpler using a graph database.
 
 ## Building the street network
 <ul>
 <li>Download a .OSM file from <a href="http://metro.teczno.com/">metro.teczno.com</a></li>
-<li>Edit and run the storeosm.py script</li>
+<li>Edit and run the storeosm.py script to add streets</li>
+<li>Put your houses or other point data into a CSV file</li>
+<li>Run <a href="https://gist.github.com/3454788">HouseNet.py</a> to import CSV and link each case to a Street</li>
+<li>Depending on stats you would like to collect, you may need to write some server-side code. <a href="https://gist.github.com/3473604">NetworkStats.py</a> is a sample script.</li>
 </ul>
 
 # About Node-Neo4j Template
@@ -58,11 +65,11 @@ tar -zxvf db-unix.tar.gz 2> /dev/null
 rm db-unix.tar.gz
 ```
 
-# Uploading to heroku
+# Uploading to Heroku
 
 Both the template app and HousePlot support deploying to Heroku.
 
-# Create the app and add a neo4j 1.8 addon
+## Create the app and add a neo4j 1.8 addon
 
     heroku create APP_NAME
     heroku addons:add neo4j --neo4j-version 1.8
