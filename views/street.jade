@@ -3,6 +3,12 @@ h1 #{street.name}
 p
     a(href='/streets') Back to everyone
 
+p(style="width:300px;padding:15px;border:1px solid #000;")
+    a(href="/demolished/#{street.id}") Demolitions on Street
+    br
+    br
+    a(href="/network/#{street.id}") Demolitions on Connecting Streets
+
 if following.length
     p #{street.name} is connected to #{following.length} streets:
     // TODO should say 'street' if only one! ;)
@@ -16,14 +22,6 @@ if following.length
     
 else
     p #{street.name} isn't connected to any streets.
-
-p(style="float:left;padding:15px;border:1px solid #000;")
-    a(href="/demolished/#{street.id}")
-        Demolitions on Street
-    br
-    br
-    a(href="/network/#{street.id}")
-        Demolitions on Connecting Streets
 
 if others.length
     form(action='/streets/#{street.id}/follow', method='POST')
