@@ -45,6 +45,7 @@ proxyProperty('id');
 proxyProperty('exists');
 
 proxyProperty('name', true);
+proxyProperty('hasfoodmarket', true); // food network map
 
 // private instance methods:
 
@@ -101,6 +102,42 @@ Street.prototype.unfollow = function (other, callback) {
         rel.del(function (err) {
             callback(err);
         });
+    });
+};
+
+Street.prototype.addMarket = function () {
+	this._node.setProperty("hasfoodmarket", "true", function(err, node){
+		callback(err);
+	});
+};
+Street.prototype.calcdistance = function(callback){
+    var query = [
+/*START d=node(1), e=node(2)
+MATCH p = shortestPath( d-[*..15]->e )
+RETURN p*/
+        'START street=node({streetId}), other=node:INDEX_NAME(INDEX_KEY="INDEX_VAL")',
+        'MATCH p = shortestPath( (street) -[*..15]-> (other) )',
+        'WHERE other.hasfoodmarket! = "true"',
+        'RETURN p'  // COUNT(rel) is a hack for 1 or 0
+    ].join('\n')
+        .replace('INDEX_NAME', INDEX_NAME)
+        .replace('INDEX_KEY', INDEX_KEY)
+        .replace('INDEX_VAL', INDEX_VAL)
+        .replace('FOLLOWS_REL', FOLLOWS_REL);
+
+    var params = {
+        streetId: this.id,
+    };
+
+    var street = this;
+    db.query(query, params, function (err, results) {
+        if (err) return callback(err);
+        
+        results.sort(function(a, b){
+          return a.p.length - b.p.length;
+        });
+        
+        callback({ linkcount: results[0].p.length, name: street.name });
     });
 };
 

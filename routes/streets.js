@@ -73,6 +73,32 @@ exports.byname = function(req, res, next) {
     });
 };
 
+
+// GET /addmarket/:streetname
+exports.marketbyname = function(req, res, next) {
+    Street.getByName(req.params.name, function(err, street) {
+      Street.get(street.id, function (err, street) {
+        if (err) return next(err);
+        street.hasfoodmarket = "true";
+        street.save(function (err) {
+            if (err) return next(err);
+            res.send("success");
+        });
+      });
+    });
+};
+
+// GET /marketdistance/:streetid
+exports.marketdistance = function(req, res, next) {
+    Street.get(req.params.id, function (err, street) {
+        if (err) return next(err);
+        street.calcdistance(function(nameanddist, err){
+            if (err) return next(err);
+            res.send("#maconga.highway[nameslug='" + nameanddist.name + "']{ roads: [" + nameanddist.linkcount + "] }");
+        });
+    });
+};
+
 // POST /streets/:id
 exports.edit = function (req, res, next) {
     Street.get(req.params.id, function (err, street) {

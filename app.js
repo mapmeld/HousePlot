@@ -69,5 +69,8 @@ app.get('/demolished/:streetid', routes.points.getDemolished);
 
 app.get('/network/:streetid', routes.points.getNetwork);
 
+app.get('/addmarket/:name', routes.streets.marketbyname);
+app.get('/marketdistance/:id', routes.streets.marketdistance);
+
 app.listen(process.env.PORT || 3000);
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
