@@ -4,8 +4,8 @@
 
 Visiting <a href="http://houseplot.herokuapp.com/streets/709">a street's page</a> shows you all named streets which are connected to it.
 
+Neo4j network view:<br/>
 <img src="http://i.imgur.com/DhfvS.png"/>
-
 
 ## Using Neo4j, a graph database
 
@@ -38,6 +38,16 @@ HousePlot stores houses as Points and links them to Streets. Then Streets are li
         'WHERE points.action = {status}',
         'RETURN points'
     ].join('\n');
+    
+Number of demolished houses in street networks monitored by code enforcement:
+
+<img src="http://i.imgur.com/hyivE.png"/>
+
+Number of demolished houses in demolished houses' networks:
+
+<img src="http://i.imgur.com/0pO60.png"/>
+
+This shows that at-risk neighborhoods have a distinctly different distribution of demolished houses.
 
 <a href="http://houseplot.herokuapp.com/marketdistance/100">/marketdistance/:id</a> returns the shortest path from the given street to a supermarket
 
@@ -60,6 +70,7 @@ HousePlot stores houses as Points and links them to Streets. Then Streets are li
         });
     });
 
+A MapBox map representing network distance from supermarkets:<br/>
 <img src="http://i.imgur.com/D72vK.png"/>
 
 ## Building the street network
