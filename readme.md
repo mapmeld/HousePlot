@@ -34,6 +34,27 @@ HousePlot stores houses as Points and links them to Streets. Then Streets are li
         'RETURN points'
     ].join('\n');
 
+<a href="http://houseplot.herokuapp.com/marketdistance/100">/marketdistance/:id</a> returns the shortest path from the given street to a supermarket
+
+    var params = {
+        streetId: this.id,
+    };
+
+    var query = [
+        'START street=node({streetId}), other=node:nodes(type="street")',
+        'MATCH p = shortestPath( (street) -[*..15]-> (other) )',
+        'WHERE other.hasfoodmarket! = "true"',	// skip roads without a hasfoodmarket property
+        'RETURN p'
+    ].join('\n');
+
+    db.query(query, params, function (err, results) {
+        if (err) return callback(err);
+        
+        results.sort(function(a, b){
+          return a.p.length - b.p.length;
+        });
+    });
+
 Collecting statistics on a neighborhood level for every point in a large dataset becomes much simpler using a graph database.
 
 ## Building the street network
