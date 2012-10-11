@@ -4,7 +4,12 @@
 
 Visiting <a href="http://houseplot.herokuapp.com/streets/709">a street's page</a> shows you all named streets which are connected to it.
 
+<img src="http://i.imgur.com/DhfvS.png"/>
+
+
 ## Using Neo4j, a graph database
+
+Collecting statistics on a neighborhood level for every point in a large dataset becomes much simpler using a graph database.
 
 HousePlot stores houses as Points and links them to Streets. Then Streets are linked to any connecting Streets. This allows us to collect information on a network / neighborhood level.
 
@@ -55,15 +60,36 @@ HousePlot stores houses as Points and links them to Streets. Then Streets are li
         });
     });
 
-Collecting statistics on a neighborhood level for every point in a large dataset becomes much simpler using a graph database.
+<img src="http://i.imgur.com/D72vK.png"/>
 
 ## Building the street network
 <ul>
 <li>Download a .OSM file from <a href="http://metro.teczno.com/">metro.teczno.com</a></li>
-<li>Edit and run the storeosm.py script to add streets</li>
+<li>Start your neo4j database:
+
+    neo4j-community-1.8/bin/neo4j start
+
+</li>
+<li>Start the HousePlot server:
+
+    npm start
+
+</li>
+<li>Edit and run the storeosm.py script (included in repo) to add and connect streets from the .osm file to your database. This can take a few hours.</li>
+</ul>
+
+
+## Adding houses
+<ul>
 <li>Put your houses or other point data into a CSV file</li>
-<li>Run <a href="https://gist.github.com/3454788">HouseNet.py</a> to import CSV and link each case to a Street</li>
-<li>Depending on stats you would like to collect, you may need to write some server-side code. <a href="https://gist.github.com/3473604">NetworkStats.py</a> is a sample script.</li>
+<li>Run <a href="https://gist.github.com/3454788">HouseNet.py</a> or a similar script to import each case as a Point, and link it to a Street</li>
+<li>Depending on stats you would like to collect, you may need to write some code to collect network stats. <a href="https://gist.github.com/3473604">NetworkStats.py</a> is a sample script.</li>
+</ul>
+
+## Adding supermarkets
+<ul>
+<li>Call /addmarket/streetname using the shortened name for each street with a supermarket. For example, /addmarket/mainst</li>
+<li>Call /marketdistance/id using the numeric id of a street to return carto of that road name and supermarket distance</li>
 </ul>
 
 # About Node-Neo4j Template
@@ -86,16 +112,6 @@ tar -zxvf db-unix.tar.gz 2> /dev/null
 rm db-unix.tar.gz
 ```
 
-# Uploading to Heroku
-
-Both the template app and HousePlot support deploying to Heroku.
-
-## Create the app and add a neo4j 1.8 addon
-
-    heroku create APP_NAME
-    heroku addons:add neo4j --neo4j-version 1.8
-    git push heroku master
-
 ## Usage
 
 ```bash
@@ -107,6 +123,16 @@ npm start
 ```
 
 The app will now be accessible at [http://localhost:3000/](http://localhost:3000/).
+
+# Uploading to Heroku
+
+Both node-neo4j template and HousePlot support deploying to Heroku.
+
+## Create the app and add a neo4j 1.8 addon
+
+    heroku create APP_NAME
+    heroku addons:add neo4j --neo4j-version 1.8
+    git push heroku master
 
 ## Miscellany
 
