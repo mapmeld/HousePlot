@@ -94,7 +94,8 @@ exports.marketdistance = function(req, res, next) {
         if (err) return next(err);
         street.calcdistance(function(nameanddist, err){
             if (err) return next(err);
-            res.send("#maconga.highway[nameslug='" + nameanddist.name + "']{ roads: [" + nameanddist.linkcount + "] }");
+			var nameOfNumber = ["zero","one","two","three","four","five","six","seven","eight","nine","ten","eleven","twelve","thirteen","fourteen","fifteen"];
+            res.send("#macongaslugstreets[name='" + nameanddist.name.replace("&apos;","") + "']{ line-color: @" + nameOfNumber[nameanddist.linkcount] + "; }");
         });
     });
 };
