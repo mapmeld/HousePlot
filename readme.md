@@ -1,5 +1,7 @@
 # About HousePlot
 
+[![Greenkeeper badge](https://badges.greenkeeper.io/mapmeld/HousePlot.svg)](https://greenkeeper.io/)
+
 <a href="http://houseplot.herokuapp.com">HousePlot</a> uses a node.js server and a neo4j graph database to build a street network from OpenStreetMap data.
 
 Visiting <a href="http://houseplot.herokuapp.com/streets/709">a street's page</a> shows you all named streets which are connected to it.
